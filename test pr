@@ -1,0 +1,77 @@
+1、svn和git
+	git是分布式版本控制，主流
+	svn是集中式版本控制，有中央服务器，将最新版本放置于中央服务器，需要自取写完上传需要联网
+2、创建仓库
+	①进入路径为全英文的目录文件，使用cmd
+	②输入 git init Initialized empty Git repository in 路径d:\githup\legit。该目录下即为工作区
+	③添加文件到仓库git add readme.txt，该文件必须要在legit文件内，子目录也可。可以多次添加文件。使用命令后文件被存放于stage（版本库的暂存区）
+	④将问价提交到仓库git commit -m "改动记录标注"。使用该命令后暂存区文件被提交到master分支
+3、版本控制的查看命令
+	git status查看文件当前的状态，如果有修改只提示有修改无法查看修改的内容
+	git diff 文件名 ：查看修改的内容
+	git log：查看最近的修改日志，HEAD标志当前版本，上个版本就是HEAD^，上上个版本是HEAD^^以此类推
+	git log --pretty=oneline：查看简易日志，可查看到版本号
+	git reset --hard HEAD^:退回上一个版本,此时再查看修改日志时无法查看到被退回的版本，
+	git reset --hard 版本号具有代表性：回到最新的版本，该版本号是最新的具有代表性的几位数字，方便git识别版本。只适用于记得版本号
+	git reflog：查看每条命令记录，对每个版本的修改记录前面都带有前几位版本号
+	git remote ：查看远程库信息；git remote -v查看远程库的详细信息
+	
+    ----撤销修改---
+	git checkout --文件名：撤销到文件最近一次操作的状态，git add或是git commit状态
+	git reset HEAD 文件名：把暂存区的文件撤销操作退回到工作区
+    ----删除文件---
+	①直接再工作区删除文件或者rm 文件名
+	②git status 查看哪些文件本删除：提示可以删除和恢复
+	③确定从版本库删除文件git rm 文件名再通过commit提交
+	④如果文件是误删可以通过git checkout --文件名：恢复文件类似一键还原
+4、githup管理（766137195@qq.com 密码：常用+字符）
+	①本地仓库路径关联到githup中的new repository
+	②仓库中打开命令行git remote add origin git@github.com:huangpingy/new repository的名字.git
+	③确保仓库中的文件都进行了git add和git commit操作
+	④git push -u origin master第一次push到GitHub需要加-u后续修改可以去掉；也可推送分支
+5、从GitHub远程库克隆本地库
+	创建new repository时需要勾选上Initialize this repository with a README
+	②本地目录下克隆远程库git clone git@github.com:huangpingy/repository的name.git
+6、git分支dev
+	①创建并切换到分支 git checkout -b 分支名称（git branch dev（分支名称）； git checkout dev）
+	②git branch 查看当前分支
+	③现在对文件的操作进行git add 和git commit都会到branch分支
+	④当对分支操作完成后切换到master：git checkout master时，对文件的操作没有改变，因为分支和master没有合并
+	⑤git merge dev 将dev合并到master。该合并历史纪录查看不到
+		git merge --no-ff -m "纪录操作"  分支名称：能够查看到合并记录
+	⑥确保合并后即可删除dev分支 git branch -d dev
+		未合并想删除分支 git branch -D dev：进行强行删除
+	⑦此时查看branch时，只有master
+7、冲突：当分支文件和master文件内容存在冲突时使用git查看冲突文件，
+	git用<<<<<<<，=======，>>>>>>>标记出不同分支的内容，修改错误内容重新进行提交，再删除分支
+8、当正在修改一个分支时，需要建立另一个分支进行修改可以使用
+	①git stash将正在修改的分支保存
+	②git checkout dev完成另一个分支修改并且删除分支后回到dev分支
+	③git stash list 查看当前被保存的分支
+	④git stash apply 恢复分支，当多次stash想恢复指定的stash时，利用查看到的分支恢复git stash apply stash@{0}		
+		git stash pop恢复的同时把stash内容也删了
+	⑤git stash drop 删除stash中被恢复的分支
+9、当写作开发时，每次提交前需要对远程库文件进行pull操作，避免和其他开发人员进行重复提交
+	①git pull 当提示no tracking information，则说明本地分支和远程分支的链接关系没有创建
+	②git branch --set-upstream-to=origin/branch-name dev 根据上一步报错进行处理
+	③git pull 在进行pull操作，如果合并有冲突需要手动修改文件然后再commit提交
+	④git push origin dev 最后再进行push
+10、标签：将commit版本号更换成更好读取的版本号
+	创建标签：①首先切换到需要打标签的分支上
+		②git tag v1.0 即可为该分支打一个新标签，该标签默认打在最新一次commit版本上
+			如果需要打在以前版本上就需要
+			⑴git log --pretty=oneline --abbrev-commit查看历史commit id号
+			⑵git tag v0.9 commit id号为该版本打标签	
+			还可创建具有说明的标签：git tag -a v0.1 -m "说明文字" commit号
+		③git tag 查看所有标签，是按照字母排序不是按时间排序
+		④git show tagname 查看标签信息
+	标签操作：git tag -d 标签名：删除标签
+		git push origin 标签名：推送指定标签到远程库
+			git push origin --tags：推送全部标签到远程库
+		删除push到远程库的标签
+			git tag -d tagname：先从本地删除标签
+			git push origin ：refs/tags/tagname：再从远程删除
+			
+
+	
+	
